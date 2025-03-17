@@ -1,0 +1,165 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{% static 'css/Admin_dash.css' %}">
+</head>
+<body onload="showSection('dashboard')">
+    <div class="topbar">
+        <div class="admin-title">Admin<i class="fa-solid fa-user-tie" style="padding-left: 8px;"></i></div>
+        <div class="logout">
+            <a href="/"><button class="logout-button">Logout</button></a>
+        </div>
+    </div>
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li class="active" onclick="showSection('dashboard')"></i>Dashboard</li>
+                <li onclick="showSection('insert-candidate')">Verify Candidate</li>
+                <!-- <li onclick="showSection('manage-candidates')">Case Files</li> -->
+                <li onclick="showSection('feedback')">Feedback</li>
+                <li onclick="showSection('complaints')">Complaints</li>
+            </ul>
+        </aside>
+        <main class="content">
+            <section id="dashboard">
+                <h2>Dashboard</h2>
+                <p>Welcome to the dashboard.</p>
+            </section>
+
+            
+
+            <section id="insert-candidate" style="display: none;">
+ 
+                <h2>Candidates</h2>
+
+                    <div class="voter-table">
+                        <table>
+                            <thead>
+                                <tr>
+
+                                    <th>Name</th>
+                                    <th>dob</th>
+                                    <th>gender</th>
+                                    
+                                    <th>Phone number</th>
+                                    <th>Aadhaar</th>
+                                    <th>Photo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in v %}
+                                 <tr>
+                                  
+
+                                    <td>{{i.fname}} {{i.mname}} {{i.lname}}</td>
+                                    <td>{{i.dob}}</td>
+                                    <td>{{i.gender}}</td>
+                                   
+                                    <td>{{i.phone}}</td>
+                                    <td>{{i.aadhaar}}</td>
+                                    <td><img src='{{i.photo.url}}' width="80px" height="80px"></td>
+                                    <td style="text-align: right">
+                                        {% if i.status == 'rejected'%}
+                                        <a href="/Verifycandidate/{{i.id}}"><button class="verify">Verify</button></a>
+                                        {% elif i.status == 'verified' %}
+                                        <a href="/Rejectcandidate/{{i.id}}"><button class="verify">Reject</button></a>
+                                        {% else %}
+                                        <a href="/Verifycandidate/{{i.id}}"><button class="verify">Verify</button></a>
+                                        <a href="/Rejectcandidate/{{i.id}}"><button class="verify">Reject</button></a>
+                                        {% endif %}
+
+                 
+                                    </td>
+                                 </tr>
+                                {% endfor %}
+
+                               
+                            </tbody>
+                        </table>
+                    </div> 
+            </section>
+            
+
+            <section id="feedback">
+                <h2>Feedback</h2>
+                <div class="container">
+                    {% for i in v1 %}
+                    <div class="card">
+                        <h3>{{i.user.name}} </h3>
+                        <p>{{i.date}}</p>
+                        <div class="underline">_____________________</div>
+                        <p>{{i.feedback}}</p>
+                    </div>
+                    {% endfor %}
+                   
+                    
+                </div>
+            </section>
+
+            <section id="complaints">
+                <h2>Complaints</h2>
+                <div class="container">
+                    {% for i in v2 %}
+                    <div class="card">
+                        <h3>{{i.user.name}}</h3>
+                        <p>{{i.date}}</p>
+                        <div class="underline">_____________________</div>
+                        <p>{{i.complaint}}</p>
+                    </div>
+                    {% endfor %}
+                    
+                    
+                    
+                </div>            
+            </section>
+
+            <section id="manage-candidates" style="display: none;">
+                <header>
+                    <h2>Case Files</h2>
+                    <!-- <button class="add-user">Add User</button> -->
+                </header>
+
+                <table class="case-table">
+                    <thead>
+                        <tr>
+                            <th>Case Number</th>
+                            <th>Criminal</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3245</td>
+                            <td>Sabith C R</td>
+                            <td>21-01-2022</td>
+                            <td style="text-align: right">
+                                <button class="check">Check</button>
+                            </td>
+                        </tr>
+            </section>
+
+        </main>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('manage-candidates').style.display = 'none';
+            document.getElementById('insert-candidate').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('complaints').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+            
+            let items = document.querySelectorAll(".sidebar ul li");
+            items.forEach(item => item.classList.remove("active"));
+            
+            document.querySelector(".sidebar ul li[onclick='showSection(\'" + sectionId + "\')']").classList.add("active");
+        }
+    </script>
+</body>
+</html>

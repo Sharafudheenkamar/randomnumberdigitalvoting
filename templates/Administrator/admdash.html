@@ -1,0 +1,61 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="{% static 'css/admindash.css' %}">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">
+        
+        PollPal <div class="logo1"><img src="logo.svg" height="30px" width="30px" alt="loading"></div></div>
+      <nav class="menu">
+        <ul>
+          <li><a href="#" class="active">Dashboard</a></li>
+          <li><a href="standings">Standings</a></li>
+          <li><a href="participants">Participants</a></li>
+          <!-- <li><a href="#">Your Team</a></li>
+          <li><a href="#">Settings</a></li> -->
+        </ul>
+      </nav>
+      <div class="user-info">
+        <p><a href="#"><i class="fa-solid fa-power-off"></i> Logout</a></p>
+      </div>
+    </aside>
+    <main class="dashboard">
+      <header class="welcome">
+        <h1 style="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">Hey Boss!</h1>
+        <p style="background-color: rgba(255, 255, 255, 0.5);width: 54%;">Check how voting is carried out in your organization: <b style="font-family: 'Brush Script MT', cursive;">PollPal</b>!</p>
+      </header>
+      <section class="events">
+        <ul>
+            <li><a href="/insertcandidate">Insert Candidate</a></li>
+            <li><a href="managecandidate">Manage Candidate</a></li>
+            <!-- <li><a href="#">Add Events</a></li> -->
+            <li><a href="feedback">View Feedback</a></li>
+            <li><a href="complaints">View Complaints</a></li>
+            <li><a href="admresult.html">Result</a></li>
+          </ul>
+      </section>
+    </main>
+    <aside class="status">
+      <div class="license">
+        <p>Current Satus</p>
+      </div>
+      <div class="activity">
+        <h3>Voting Activity</h3>
+        {% for i in val %}
+        <ul>
+          <li>{{i.candidate.fname}} {{i.candidate.mname}} {{i.candidate.lname}} : {{i.vote}}</li>
+        </ul>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

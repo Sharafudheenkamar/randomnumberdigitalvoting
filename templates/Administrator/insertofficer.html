@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>insert officer</title>
+  <link rel="stylesheet" href="insertofficer.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Add Officer</h2>
+    <form class="form">
+      <!-- Login Details Section -->
+     
+
+      <!-- Student Details Section -->
+      <fieldset>
+        <legend style="color: black;">Officer Details</legend>
+
+        
+
+        <div class="name">
+          <div class="form-group">
+            <label for="name">NAME</label>
+            <input type="text" id="name" placeholder="Enter First Name" name="name" required>
+          </div>
+
+        
+
+          
+        
+
+          <div class="row">
+            <!-- <div class="form-group">
+              <label for="registration">*DATE OF REGISTRATION</label>
+              <input type="date" id="registration" name="registration" required>
+            </div> -->
+            <div class="form-group">
+            <label>GENDER</label>
+            <div class="radio-group">
+              <input type="radio" id="male" name="gender" value="male" checked>
+              <label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="female">
+              <label for="female">Female</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label for="dob">DATE OF BIRTH</label>
+              <input type="date" id="dob" name="dob">
+            </div>
+            <div class="form-group">
+            <label for="mobile">MOBILE</label>
+            <input type="tel" id="mobile" name="mobile" required>
+            </div>
+        
+
+          <div class="row">
+            <div class="form-group">
+            <label for="address">Mail</label>
+            <input type="text" id="address" name="address">
+          </div>
+        
+
+        
+
+          <div class="row">
+              <div class="form-group">
+                <div class="form-group">
+                  <label for="photo">SELECT PHOTO</label>
+                  <div class="photo-upload">
+                    <img src="profile.png" alt="Avatar">
+                    <div class="button">
+                      <button type="button">Upload Image</button>
+                    </div>
+                    
+                    
+                  <p style="margin-left: -250px;margin-top: 8px;">Max resolution: 150 x 210px, formats: png, jpg, jpeg</p>
+                  <div class="submit">
+                    <button type="submit" style="margin-left: 60px;margin-top: 20px;margin-bottom: -30px;width: 80px;">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      </fieldset>
+    </form>
+  </div> 
+</body>
+</html>
