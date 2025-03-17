@@ -118,7 +118,7 @@ class Vote(models.Model):
             self.vote_id = get_random_string(length=16)
         
         # Generate hash of the current vote
-        vote_data = f"{self.vote_id}{self.voter.voter_id}{self.candidate.candidate_id}{self.timestamp}"
+        vote_data = f"{self.vote_id}{self.voter.id}{self.candidate.id}{self.timestamp}"
         self.vote_hash = hashlib.sha256(vote_data.encode()).hexdigest()
 
         # Assign the previous hash
@@ -129,4 +129,4 @@ class Vote(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Vote by {self.voter.name} for {self.candidate.name}"
+        return f"Vote by {self.voter.name} for {self.candidate.fname}"

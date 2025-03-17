@@ -563,7 +563,8 @@ from django.shortcuts import render
 from .models import UserGroup
 
 def group_list_view(request):
-    groups = UserGroup.objects.all()  # Fetch all unique groups
+    groups = UserGroup.objects.all() 
+    print(groups) # Fetch all unique groups
     return render(request, "Officer/group_list.html", {"groups": groups})
 
 class CreateUserGroupsView(View):
@@ -594,7 +595,14 @@ class ProcessGroupView(View):
             "group_id": str(group.group_id),
             "candidates": list(candidates.values("fname", "aadhaar", "dob", "phone"))
         })
-    
+
+class getcodes(APIView):
+    def get(self,request,id):
+        usercodes=UserCandidateCode.objects.filter(user__LOGIN_ID__id=id).all()
+        ser=UserCandidateCodeserializer(usercodes,many=True)
+        return Response(ser.data)
+
+
 import string
 import random
 
@@ -663,7 +671,7 @@ class CastVoteAPIView(APIView):
 
         # Validate unique code
         try:
-            user_code = UserCandidateCode.objects.get(user_id=user_id, unique_code=unique_code)
+            user_code = UserCandidateCode.objects.get(user__LOGIN_ID__id=user_id, unique_code=unique_code)
         except UserCandidateCode.DoesNotExist:
             return Response({"error": "Invalid unique code or user."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -688,12 +696,12 @@ class CastVoteAPIView(APIView):
         voter.save()
 
         # Send confirmation email
-        if voter.email:
+        if voter.mailid:
             send_mail(
                 "Vote Confirmation",
                 "You have successfully cast your vote!",
                 "admin@example.com",  # Replace with actual sender email
-                [voter.email],
+                [voter.mailid],
             )
 
         return Response({"message": "Vote cast successfully!"}, status=status.HTTP_201_CREATED)
@@ -714,7 +722,7 @@ class WardResultAPIView(APIView):
 
         # Validate voter and get their ward
         try:
-            voter = User_model.objects.get(login_id__id=login_id)
+            voter = User_model.objects.get(LOGIN_ID__id=login_id)
             voter_ward = voter.ward  # Assuming the VoterTable has a 'ward' field
         except User_model.DoesNotExist:
             return Response({"error": "Voter not found!"}, status=status.HTTP_404_NOT_FOUND)
@@ -726,7 +734,7 @@ class WardResultAPIView(APIView):
         result_data = [
             {
                 "candidate_id": candidate.id,
-                "candidate_name": candidate.name,  # Assuming 'name' is a field in CandidateTable
+                "candidate_name": candidate.fname,  # Assuming 'name' is a field in CandidateTable
                 "ward": candidate.ward.name,  # Assuming 'ward' is a ForeignKey to a Ward model
                 "vote_count": candidate.vote_count,
             }
@@ -740,5 +748,6 @@ class WardResultAPIView(APIView):
 class Result(View):
     def get(self,request):
        current_time = datetime.datetime.now()
-       obj=Candidate_model.objects.annotate(vote_count=Count('vote')).order_by('-vote_count')
-       return render(request,'Votte/result.html',{'obj':obj,'current_time':current_time})      
+       obj = Vote.objects.values('candidate__fname','candidate__ward').annotate(vote_count=models.Count('id')).order_by('-vote_count')
+       print(obj)
+       return render(request,'Officer/result.html',{'results':obj,'current_time':current_time})      

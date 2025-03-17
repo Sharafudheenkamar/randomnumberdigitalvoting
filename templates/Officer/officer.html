@@ -15,7 +15,7 @@
     <div class="topbar">
         <div class="admin-title">Officer<i class="fa-solid fa-user-tie" style="padding-left: 8px;"></i></div>
         <div class="logout">
-            <a href="{% url 'logout' %}">Logout</a>
+            <a href="/">Logout</a>
 
         </div>
     </div>
@@ -28,7 +28,8 @@
                 <li onclick="showSection('insert-cd')">Insert Candidate</li>
                 <li onclick="showSection('case-files')">Manage Candidate</li>
                 <li onclick="showSection('show-groups')">Generate Groups</li>
-                <li onclick="loadGroups()">View Groups</li> 
+                <li onclick="loadGroups()">View Groups</li>
+                <li><a href="/Result/" style="text-decoration: none;">Results</a></li>
             </ul>
         </aside>
         <main class="content">
@@ -283,7 +284,7 @@
 
 
 
-            <section id="show-groups">
+            <section id="show-groups" style="display: none;">
 
                 <header>
                     <h2>Generate codes</h2>
@@ -294,7 +295,7 @@
 
                 </div>
             </section>
-            <section id="view-groups">
+            <section id="view-groups" style="display: none;">
 
                 <header>
                     <h2>Generate codes</h2>
@@ -311,12 +312,18 @@
         </main>
     </div>
     <script>
+        function generateCodes(groupId) {
+            fetch(`generate-codes/${groupId}/`)
+                .then(response => response.json())
+                .then(data => alert(data.status))
+                .catch(error => console.error("Error:", error));
+        }
         function loadGroups() {
     fetch("/groups/") // Ensure this matches your Django URL path
         .then(response => response.text()) // Get HTML response
         .then(html => {
-            document.getElementById("view-groups").innerHTML = html;
-            document.getElementById("view-groups").style.display = "block";
+            document.getElementById("show-groups").innerHTML = html;
+            document.getElementById("show-groups").style.display = "block";
         })
         .catch(error => console.error("Error loading groups:", error));
 }
@@ -327,6 +334,7 @@
             document.getElementById('insert-cd').style.display = 'none';
             document.getElementById('case-files').style.display = 'none';
             document.getElementById('show-groups').style.display = 'none';
+            // document.getElementById('view-groups').style.display = 'none';
 
             document.getElementById(sectionId).style.display = 'block';
             

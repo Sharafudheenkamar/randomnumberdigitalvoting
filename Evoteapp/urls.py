@@ -48,7 +48,9 @@ urlpatterns = [
     path('create-groups/', CreateUserGroupsView.as_view(), name='create_groups'),
     path('process-group/', ProcessGroupView.as_view(), name='process_group'),
     path("groups/", group_list_view, name="group-list"),
-    path('generate-codes/<uuid:group_id>/', GenerateAndSendCodesView.as_view(), name='generate_codes'),
+    path('generate-codes/<int:group_id>/', GenerateAndSendCodesView.as_view(), name='generate_codes'),
+    path('getcodes/<int:id>',getcodes.as_view(),name='getcodes'),
+    
 
     path("api/vote/", CastVoteAPIView.as_view(), name="cast-vote"),
     path('Result/',Result.as_view(),name='Result'),

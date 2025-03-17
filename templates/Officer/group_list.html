@@ -2,14 +2,7 @@
 <html>
 <head>
     <title>Group Selection</title>
-    <script>
-        function generateCodes(groupId) {
-            fetch(`/generate-codes/${groupId}/`)
-                .then(response => response.json())
-                .then(data => alert(data.status))
-                .catch(error => console.error("Error:", error));
-        }
-    </script>
+
 </head>
 <body>
     <h1>Select a Group</h1>
