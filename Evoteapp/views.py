@@ -233,7 +233,7 @@ class LoginPage(APIView):
             return Response({"error": "Email and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = Login_model.objects.get(username=username, password=password)
+            user = Login_model.objects.get(username=username, password=password,status='verified')
             return Response({"task": "Login successful", "user_id": user.id,"type":user.type}, status=status.HTTP_200_OK)
         except Login_model.DoesNotExist:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -417,7 +417,7 @@ class UserAPIView(APIView):
         password = data.get("password")
 
         # Create a login entry
-        login_data = {"username": username, "password": password, "type": "user", "status": "active"}
+        login_data = {"username": username, "password": password, "type": "voter", "status": "active"}
         login_serializer = loginserializer(data=login_data)
         print(login_serializer)
 
@@ -462,7 +462,7 @@ class UserDetailAPIView(APIView):
 
     def get_object(self, pk):
         try:
-            return User_model.objects.get(pk=pk)
+            return User_model.objects.get(LOGIN_ID__id=pk)
         except User_model.DoesNotExist:
             return None
 
@@ -663,6 +663,7 @@ class GenerateAndSendCodesView(View):
 
 class CastVoteAPIView(APIView):
     def post(self, request, *args, **kwargs):
+        print(request.data)
         user_id = request.data.get("user_id")
         unique_code = request.data.get("unique_code")
 
@@ -672,6 +673,7 @@ class CastVoteAPIView(APIView):
         # Validate unique code
         try:
             user_code = UserCandidateCode.objects.get(user__LOGIN_ID__id=user_id, unique_code=unique_code)
+            print(user_code)
         except UserCandidateCode.DoesNotExist:
             return Response({"error": "Invalid unique code or user."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -682,8 +684,8 @@ class CastVoteAPIView(APIView):
             return Response({"error": "Voter not found!"}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the voter has already voted
-        if voter.voter_status:
-            return Response({"error": "You have already voted!"}, status=status.HTTP_400_BAD_REQUEST)
+        if voter.voter_status == True:
+            return Response({"message": "You have already voted"}, status=status.HTTP_201_CREATED)
 
         # Validate candidate
         candidate = user_code.candidate  # Candidate linked to unique code
@@ -737,6 +739,8 @@ class WardResultAPIView(APIView):
                 "candidate_name": candidate.fname,  # Assuming 'name' is a field in CandidateTable
                 "ward": candidate.ward.name,  # Assuming 'ward' is a ForeignKey to a Ward model
                 "vote_count": candidate.vote_count,
+                "candidate_image": request.build_absolute_uri(candidate.photo.url) if candidate.photo else None
+
             }
             for candidate in candidates
         ]
